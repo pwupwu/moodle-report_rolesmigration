@@ -17,4 +17,3 @@ Known Issues:
 == Changelog ==
 * Added the branch report_22 to work with Moodle 22
 * Multiple code updates to better align with Moodle coding standards. Props Nicholas Koeppen <nkoeppe@wisc.edu>
-* Only works in /report/rolesmigration now. Tested on Moodle 2.2 and 2.3.
