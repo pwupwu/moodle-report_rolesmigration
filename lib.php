@@ -14,6 +14,55 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
+/**
+ * Returns a particular array value for the named variable, taken from
+ * POST or GET, otherwise returning a given default.
+ *
+ * This function should be used to initialise all optional values
+ * in a script that are based on parameters.  Usually it will be
+ * used like this:
+ *    $ids = optional_param('id', array(), PARAM_INT);
+ *
+ *  Note: arrays of arrays are not supported, only alphanumeric keys with _ and - are supported
+ *
+ * @param string $parname the name of the page parameter we want
+ * @param mixed  $default the default value to return if nothing is found
+ * @param string $type expected type of parameter
+ * @return array
+ */
+function my_optional_param_array($parname, $default, $type) {
+    if (func_num_args() != 3 or empty($parname) or empty($type)) {
+        throw new coding_exception('optional_param_array() requires $parname, $default and $type to be specified (parameter: '.$parname.')');
+    }
+
+    if (isset($_POST[$parname])) {       // POST has precedence
+        $param = $_POST[$parname];
+    } else if (isset($_GET[$parname])) {
+        $param = $_GET[$parname];
+    } else {
+        return $default;
+    }
+    if (!is_array($param)) {
+        debugging('optional_param_array() expects array parameters only: '.$parname);
+        return $default;
+    }
+
+    $result = array();
+    foreach($param as $key=>$value) {
+        if (!preg_match('/^[a-z0-9_-]+$/i', $key)) {
+            debugging('Invalid key name in optional_param_array() detected: '.$key.', parameter: '.$parname);
+            continue;
+        }
+        if (is_array($value)) {
+            $result[$key] = clean_param_array($value, $type, true);
+        }else{
+            $result[$key] = clean_param($value, $type);
+        }
+    }
+
+    return $result;
+}
 /**
  * @package   moodlerolesmigration
  * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu> and others
