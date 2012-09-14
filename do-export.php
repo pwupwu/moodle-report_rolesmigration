@@ -45,7 +45,7 @@ $fileinfo = array(
     'component' => 'report_rolesmigration',
     'filearea' => 'backup',
     'itemid' => time(),
-    'filepath' => '/report/rolesmigration/temp/',
+    'filepath' => '/admin/report/rolesmigration/temp/',
     'filename' => 'rolesexport.xml'
 );
 
